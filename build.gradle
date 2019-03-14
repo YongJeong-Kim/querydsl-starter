@@ -1,4 +1,4 @@
-buildscript {
+/*buildscript {
   ext {
     springBootVersion = '2.1.2.RELEASE'
     querydslPluginVersion = '1.0.10' // 플러그인 버전
@@ -12,12 +12,18 @@ buildscript {
     classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}") // querydsl 플러그인 의존성 등록
     classpath("io.franzbecker:gradle-lombok:1.8")
   }
+}*/
+
+plugins {
+  id 'org.springframework.boot' version '2.1.3.RELEASE'
+  id 'java'
+  id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+  id "io.franzbecker.gradle-lombok" version "1.8"
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: "com.ewerk.gradle.plugins.querydsl"
 apply plugin: 'io.franzbecker.gradle-lombok'
 
 group = 'com.kyj'
@@ -63,4 +69,13 @@ sourceSets {
       srcDirs = ['src/main/java', querydslSrcDir]
     }
   }
+}
+
+// gradle 5.x 이상에서 아래 두 코드 추가
+compileQuerydsl {
+  options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+  querydsl.extendsFrom compileClasspath
 }
